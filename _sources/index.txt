@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to test_document's documentation!
+Welcome to documentation!
 =========================================
+
+工事中
 
 Contents:
 
@@ -12,11 +14,6 @@ Contents:
    :maxdepth: 2
 
    HF.rst
-
-.. math::
-
-   (a + b) ^ 2
-   \hat H \psi
 
 
 Indices and tables
