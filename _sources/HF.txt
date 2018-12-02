@@ -1,0 +1,68 @@
+
+=========================
+Hartree-Fock equation
+=========================
+
+.. |Schrodinger| replace:: :math:`\rm Schr\ddot{o}dinger`
+
+時間非依存の |Schrodinger| 方程式は以下のように表される。
+
+.. math::
+
+   \hat{H}\Psi=E\Psi
+
+ただし、ここで、:math:`\hat{H}` は
+
+.. math::
+
+   \hat{H} = -\sum_i{\frac{1}{2m}\nabla^2_i}-\sum_{ia}{\frac{Z_a}{R_{ia}}}+\sum_{ij}{\frac{1}{r_{ij}}}
+
+である。多電子系の |Schrodinger| 方程式の解は反対称性を満たす必要があるが、
+この反対称性を満たす形でかつコンピューターのメモリ上に表現しやすい形式として、
+スレーター行列式を近似解に使うというのがHartree-Fock方程式のアイデアである。
+例えば、二電子のスレーター行列式は以下のように表される。
+
+.. math::
+
+   \Psi(r_1, r_2) \approx \chi_1(r_1) \chi_2(r_2) - \chi_2(r_1) \chi_1(r_2) = \left |
+   \begin{array}{cc}
+   \chi_1(r_1) & \chi_2(r_2) \\
+   \chi_1(r_2) & \chi_2(r_1)
+   \end{array}
+   \right |
+
+
+変分原理によると、このスレーター行列式のエネルギーを最小にする係数の時にスレーター行列式は真の解に近づくはずである。
+このような時に係数が満たすべき条件がHartree-Fock方程式である。
+
+.. math::
+
+   -\frac{1}{2m}\nabla^2\chi_i(r)-\sum_{a}{\frac{Z_a}{|R_{a}-r|}}+\sum_j{\int{dr' \chi_j^*(r')\chi_j(r')\chi_i(r)}}-\sum_j{\int{dr' \chi_j^*(r')\chi_i(r')\chi_j(r)}}=\epsilon_i \chi_i 
+
+さて、この方程式は線形方程式ではなく、ある分子軌道 :math:`\chi_i` が他の分子軌道の影響を受けることになるので、繰り返し解く必要がある。(SCF)
+実際にこの関数を解くにあたっては、基底関数を用いて解くのが便利であり、この方法をRoothaan方程式という。
+Rhoothaan方程式では、基底関数を :math:`\phi_i` とすると、分子軌道は
+
+.. math::
+
+   \chi_i = \sum_j{\phi_j C_ji}
+
+.. math::
+
+   FC = SC\epsilon
+
+.. math::
+
+   F = H + G  
+
+.. math::
+   G_{ij} = \sum_{kl}{D_{kl}(ij|kl)-(ik|jl)}
+
+.. math::
+   D_{ij} = \sum_k^{nocc}{C_{ki}^*  C_{kj}}
+
+となる。さて、この方程式を解く計算プログラムが多数存在していて、GaussianやGames等はガウス型関数を基底関数として用いるプログラムである。
+ガウス関数を用いることの利点は解析解が得られることであり、様々な議論でよく使われる基底関数である。
+従って、ガウス関数を使ったプログラムを自分で実装することが出来れば話は早いのだが、それには一つ大きな障壁が立ちはだかる。
+積分の実装である。Rhoothaan方程式の全ての行列は基底関数で演算子を挟み込んで積分を取ったものであり、S軌道とS軌道の積分は非常に簡単でSzaboの巻末等に記されているが、P軌道以降が絡んでくるような積分は難しい。
+そこで、今回、対話環境でHartree-Fock法、場合によってPost-Hartree-Fock法を体験できる環境が欲しいと思ったので、プログラム言語Juliaを用いて一部の積分を実装した。

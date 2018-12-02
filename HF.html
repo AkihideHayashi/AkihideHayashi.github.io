@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hartree-Fock equation &#8212; test_document 0.0.1 ドキュメント</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="test_document 0.0.1 ドキュメント" href="index.html" />
+    <link rel="prev" title="Welcome to test_document’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hartree-fock-equation">
+<h1>Hartree-Fock equation<a class="headerlink" href="#hartree-fock-equation" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>時間非依存の <span class="math">\(\rm Schr\ddot{o}dinger\)</span> 方程式は以下のように表される。</p>
+<div class="math">
+\[\hat{H}\Psi=E\Psi\]</div>
+<p>ただし、ここで、<span class="math">\(\hat{H}\)</span> は</p>
+<div class="math">
+\[\hat{H} = -\sum_i{\frac{1}{2m}\nabla^2_i}-\sum_{ia}{\frac{Z_a}{R_{ia}}}+\sum_{ij}{\frac{1}{r_{ij}}}\]</div>
+<p>である。多電子系の <span class="math">\(\rm Schr\ddot{o}dinger\)</span> 方程式の解は反対称性を満たす必要があるが、
+この反対称性を満たす形でかつコンピューターのメモリ上に表現しやすい形式として、
+スレーター行列式を近似解に使うというのがHartree-Fock方程式のアイデアである。
+例えば、二電子のスレーター行列式は以下のように表される。</p>
+<div class="math">
+\[\begin{split}\Psi(r_1, r_2) \approx \chi_1(r_1) \chi_2(r_2) - \chi_2(r_1) \chi_1(r_2) = \left |
+\begin{array}{cc}
+\chi_1(r_1) &amp; \chi_2(r_2) \\
+\chi_1(r_2) &amp; \chi_2(r_1)
+\end{array}
+\right |\end{split}\]</div>
+<p>変分原理によると、このスレーター行列式のエネルギーを最小にする係数の時にスレーター行列式は真の解に近づくはずである。
+このような時に係数が満たすべき条件がHartree-Fock方程式である。</p>
+<div class="math">
+\[-\frac{1}{2m}\nabla^2\chi_i(r)-\sum_{a}{\frac{Z_a}{|R_{a}-r|}}+\sum_j{\int{dr' \chi_j^*(r')\chi_j(r')\chi_i(r)}}-\sum_j{\int{dr' \chi_j^*(r')\chi_i(r')\chi_j(r)}}=\epsilon_i \chi_i\]</div>
+<p>さて、この方程式は線形方程式ではなく、ある分子軌道 <span class="math">\(\chi_i\)</span> が他の分子軌道の影響を受けることになるので、繰り返し解く必要がある。(SCF)
+実際にこの関数を解くにあたっては、基底関数を用いて解くのが便利であり、この方法をRoothaan方程式という。
+Rhoothaan方程式では、基底関数を <span class="math">\(\phi_i\)</span> とすると、分子軌道は</p>
+<div class="math">
+\[\chi_i = \sum_j{\phi_j C_ji}\]</div>
+<div class="math">
+\[FC = SC\epsilon\]</div>
+<div class="math">
+\[F = H + G\]</div>
+<div class="math">
+\[G_{ij} = \sum_{kl}{D_{kl}(ij|kl)-(ik|jl)}\]</div>
+<div class="math">
+\[D_{ij} = \sum_k^{nocc}{C_{ki}^*  C_{kj}}\]</div>
+<p>となる。さて、この方程式を解く計算プログラムが多数存在していて、GaussianやGames等はガウス型関数を基底関数として用いるプログラムである。
+ガウス関数を用いることの利点は解析解が得られることであり、様々な議論でよく使われる基底関数である。
+従って、ガウス関数を使ったプログラムを自分で実装することが出来れば話は早いのだが、それには一つ大きな障壁が立ちはだかる。
+積分の実装である。Rhoothaan方程式の全ての行列は基底関数で演算子を挟み込んで積分を取ったものであり、S軌道とS軌道の積分は非常に簡単でSzaboの巻末等に記されているが、P軌道以降が絡んでくるような積分は難しい。
+そこで、今回、対話環境でHartree-Fock法、場合によってPost-Hartree-Fock法を体験できる環境が欲しいと思ったので、プログラム言語Juliaを用いて一部の積分を実装した。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="前の章へ">Welcome to test_document&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/HF.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Akihide.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/HF.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
