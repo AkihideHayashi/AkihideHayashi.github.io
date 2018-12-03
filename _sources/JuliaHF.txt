@@ -1,0 +1,253 @@
+
+=========================
+JuliaでHartree-Fock方程式
+=========================
+
+.. |Schrodinger| replace:: :math:`\rm Schr\ddot{o}dinger`
+
+n電子の |Schrodinger| 方程式
+
+.. math::
+   \mathscr{H} \Psi(\mathbf{r}_1,\cdots,\mathbf{r}_n )=\mathscr{E} \Psi(\mathbf{r}_1,\cdots,\mathbf{r}_n)
+
+の解は次元の呪いを受けてコンピューター上で表現するのが非常に難しいことです。なので我々は、電子には反対称性があることに着目し、行列式を使って電子波動関数を表現しようとします。このような行列式をスレーター行列式と言います。
+例えば二電子ならば
+
+.. math::
+   \Psi(\mathbf{r}_1,\mathbf{r}_2 )\approx\left |
+   \begin{array}{cc}
+   χ_1 (\mathbf{r}_1 ) & χ_2 (\mathbf{r}_1 ) \\ χ_1 (\mathbf{r}_2 ) & χ_2 (\mathbf{r}_2 )  \end{array} \right | = χ_1 (\mathbf{r}_1 ) χ_2 (\mathbf{r}_2 )-χ_1 (\mathbf{r}_2 ) χ_2 (\mathbf{r}_1 )
+
+
+のような形です。この時、:math:`\chi_i` を分子軌道と言います。分子軌道を単原子の軌道をガウス関数の和 :math:`\phi_k` で模した原子軌道の線形結合で表現することを考えます。
+
+.. math::
+   \phi_k(\mathbf{r})=\sum_i{a_{ik}x^{L_x}y^{L_y}z^{L_z}\exp{(\zeta_{ik}\mathbf{r}^2)}}
+
+.. math::
+   \chi_i(\mathbf{r}_j)=\sum_k{\phi_k(\mathbf{r}_j-\mathbf{R})C_{ki}}
+
+ここで、:math:`L_1+L_2+L_3` が0ならS軌道、1ならP軌道、2ならD軌道です。
+多電子の |Schrodinger| 方程式の解を単一のスレーター行列式で表現しようとする中で、変分原理に従って最良の波動関数を求める方法がHartre-Fock方程式です。
+Szabo and Ostlundの「新しい量子化学」3章の内容ですが、ガウス基底のHartree-Fock方程式と言った場合、一般的にはRoothaan方程式のことを指し、
+
+.. math::
+   \bf FC=SCϵ
+
+という一般化固有値問題を解き、得られた行列 :math:`\bf C` が分子軌道の係数となります。ただし、ここで、
+
+オーバーラップ積分
+
+.. math::
+   S_{\mu\nu} = \int{\mathrm{d}\mathbf{r}\phi_\mu^*(\mathbf{r})\phi_\nu(\mathbf{r})}
+
+フォック行列
+
+.. math::
+   F_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\frac{1}{2m}\nabla^2_{\mathbf{r}_1}-\sum_A{\frac{Z_A}{|\mathbf{r}_1-\mathbf{R}_A|}}] \phi_\nu(\mathbf{r}_1)}+2 \sum_a^{N/2}{\sum_{\lambda\sigma}{C_{\lambda a}C_{\sigma a}^*[(\mu\nu|\sigma\lambda)-\frac{1}{2}(\mu\lambda|\sigma\nu)]}}
+
+二電子積分
+
+.. math::
+   (\mu\nu|\sigma\lambda) = \int{\mathrm{d}\mathbf{r}_1\mathrm{d}\mathbf{r}_2\frac{\phi^*_\mu(\mathbf{r}_1)\phi_\nu(\mathbf{r}_2)\phi^*_\lambda(\mathbf{r}_2)\phi_\sigma(\mathbf{r}_2)}{|\mathbf{r}_1-\mathbf{r}_2|}}
+
+です。また、 :math:`\bf \epsilon` は対角行列です。演算子 :math:`\bf F` が :math:`\bf C` にあらわに依存している非線形方程式の形をしているため、Fに用いたCが固有値問題の解となるようなCが得られるまで繰り返し方程式を解いていきます(SCF)。いくつかの項に分解することで見通し良くプログラムを書くことが出来、以下のように分解します。
+
+フォック行列
+
+.. math::
+   F_{\mu\nu} = H^{core}_{\mu\nu} + G_{\mu\nu}
+
+コアハミルトニアン
+
+.. math::
+   H^{core}_{\mu\nu} = T_{\mu\nu} + N_{\mu\nu}
+
+運動エネルギー積分
+
+.. math::
+   T_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\frac{1}{2m}\nabla^2_{\mathbf{r}_1}] \phi_\nu(\mathbf{r}_1)}
+
+核引力積分
+
+.. math::
+   N_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\sum_A{\frac{Z_A}{|\mathbf{r}_1-\mathbf{R}_A|}}] \phi_\nu(\mathbf{r}_1)}
+
+フォック行列の二電子部分
+
+.. math::
+   G_{\mu\nu} = \sum_{\lambda\sigma}{[(\mu\nu|\sigma\lambda)-\frac{1}{2}(\mu\lambda|\sigma\nu)]}
+   
+密度行列
+
+.. math::
+   P_{\lambda\sigma} = 2 \sum_{a}^{N/2}{C_{\lambda a}C^*_{\sigma a}}
+
+と分解します。二電子部分はクーロン項（前半）と交換項（後半）から成り立っています。
+計算する時は、
+
+#. :math:`S_{\mu\nu}` と :math:`T_{\mu\nu}` と :math:`N_{\mu\nu}` を計算
+#. :math:`H^{core}_{\mu\nu}` を計算
+#. 適当に :math:`F_{\mu\nu}` を初期化。今回は :math:`H^{core}_{\mu\nu}` と同じにしました。
+#. :math:`F_{\mu\nu}` を対角化し、固有ベクトルが格納された行列 :math:`\mathbf{C}` を得る。
+#. :math:`\mathbf{C}` から :math:`P_{\lambda\sigma}` を計算
+#. :math:`P_{\lambda\sigma}` から :math:`G_{\lambda\sigma}` を計算
+#. :math:`F_{\mu\nu}` を計算。4へ戻る
+
+さて、これらを実装しようとした時、ネックは各行列の要素の計算となります。逆に言うと、この部分さえ突破出来ればRoothaan方程式の実装は非常に簡単です。
+そこで、Juliaで積分を実装してみました。参考にしたのは小原積分 [1]_ です。この方法では、S軌道の積分を使ってP軌道の積分を計算し、P軌道の積分を使ってD軌道の積分を計算するという具合です。
+
+GaussianShell.jl はgitからインストールするか、適当なディレクトリにダウンロードしてincludeして使うことが出来ます。
+もしもgitからインストールするなら、juliaインタプリタを起動します。Jupyterでは上手くいきませんでした。
+juliaプロンプトで”]”を押すとpkgモードになるので、
+
+.. code-block:: julia
+
+   ] add https://github.com/akhdhys/GaussianShell.jl
+
+とすれば私のgitからライブラリをインストールすることが出来ます。なお、消し方は良くわからなかったので、自己責任でお願いします。
+一応~/.julia内のディレクトリから一つ一つ消した上でPkg.rm("GaussianShell")とやれば消えてくれました。
+という具合なので一応、好きな所にダウンロードしてincludeすることを推奨しておきますが、includeする度に毎回コンパイルするとなるとコンパイル時間が気になるかもしれません。
+
+インストールが完了したら、Jupyterで以下を実行していくことでHartree-Fock方程式を解くことが出来ます。
+
+適当なディレクトリに置いた場合は
+
+.. code-block:: julia
+
+   include("GaussianShell.jl")
+
+あとは共通
+
+.. code-block:: julia
+
+   using LinearAlgebra
+   using GaussianShell
+
+
+基底関数を用意しましょう。量子化学における典型的な最小基底はSTO-3Gと呼ばれる基底であり、Basis Set Exchangeからダウンロードすることが出来ます。
+
+.. code-block:: julia
+
+   angstrome = 1 / 0.52917721067
+
+   function genSTO3G(n)
+       if n == 1
+           [([0], [3.42525091 0.15432897;
+                   0.62391373 0.53532814;
+                   0.16885540 0.44463454])]
+       elseif n == 6
+           [([0], [71.6168370 0.15432897;
+                    13.0450960 0.53532814;
+                     3.5305122 0.44463454]),
+            ([0, 1], [2.9412494 -0.09996723  0.15591627       
+                      0.6834831  0.39951283  0.60768372       
+                      0.2222899  0.70011547  0.39195739])]
+       elseif n == 8
+           [([0],[130.7093200 0.15432897;
+                   23.8088610 0.53532814;
+                    6.4436083 0.44463454]),
+            ([0, 1], [5.0331513 -0.09996723  0.15591627;
+                      1.1695961  0.39951283  0.60768372;
+                      0.3803890  0.70011547  0.39195739])]
+       else
+           error()
+       end
+   end
+
+   generate_basis(N, R, b) = [Shell(cg..., R[i, :]) for i in 1:length(N) for cg in b(N[i])]
+
+RHFのRoothaan方程式のメインループです。direct_rhf!はG行列を生成し、与えられたG行列に上書きする関数です。
+G行列の生成は二電子積分に依存しますが、二電子積分は基底の数の4乗のオーダーで増えるのでメモリに保存するのが辛い量です。
+なので、足し算の順番を変えることでうまく一階のSCFにつき各一回だけ計算することができ、それをdirect scfと言います。
+
+.. code-block:: julia
+
+   function RHF!(basis::Vector{Shell}, N::Vector{Float64}, R::Matrix{Float64}, n::Int64)
+       e_nrep = nuclear_repulsion(N, R)
+       n_occ = Integer(sum(N) / 2)
+       S, T, V = oneelectrons(basis, N, R)
+       H = T .+ V
+       D = zeros(size(S))
+       G = zeros(size(S))
+       D .= H
+       C = zeros(size(S))
+       E = 0
+       for i in 1:n
+           direct_rhf!(basis, D, G)
+           F = H + G
+           ϵ, C = eigen(Hermitian(F), Hermitian(S))
+           D .= C[:, 1:n_occ] * C[:, 1:n_occ]'
+           E = sum(diag(D * (2 * H + G)'))
+           println(i, " ", E + e_nrep)
+       end
+       E + e_nrep, C
+   end
+
+
+とりあえず、水素を計算してみましょう。
+
+.. code-block:: julia
+
+   R = [0.0000000000000000       0.000000000000000        0.00000;
+        0.0000000000000000       0.000000000000000        0.7414] * angstrome
+   N = [1, 1]
+   basis = generate_basis(N, R, genSTO3G)
+
+   E, C = RHF!(basis, [float(n) for n in N], R, 20)
+
+Cに着目すると、結合性軌道も反結合性軌道も二つの係数はそれぞれ同じで、結合性軌道は同符号、反結合性軌道は異符号となっていることがわかります。
+
+次は水を計算してみます。
+
+.. code-block:: julia
+
+   R = [0.0000000000000000       -0.14322234298078604        0.00000;
+        1.6380335020342411        1.13655688035841070        0.00000;
+       -1.6380335020342411        1.13655688035841070        0.00000]
+   N = [8, 1, 1]
+   basis = generate_basis(N, R, genSTO3G)
+
+   C = RHF!(basis, [float(n) for n in N], R, 20)
+
+この座標はGaussianでの構造最適化済の値を入力しており、Gaussianの計算結果と同じ、-74.942Hartreeのエネルギーになるはずです。
+最後に、ベンゼンですが、これは少し重いです。というのも、二電子積分の計算はboys関数という関数を毎回計算するのですが、
+最適化が完了しておらず、ベンゼンの計算ではその最適化出来ていない部分を踏むようです。これはそのうち直します。
+
+.. code-block:: julia
+
+   R =   [-1.05898122   -1.05227886    0.00000000;
+           0.33617878   -1.05227886    0.00000000;
+           1.03371678    0.15547214    0.00000000;
+           0.33606278    1.36398114   -0.00119900;
+          -1.05876222    1.36390314   -0.00167800;
+          -1.75636322    0.15569714   -0.00068200;
+          -1.60874022   -2.00459586    0.00045000;
+           0.88568678   -2.00479186    0.00131500;
+           2.13339678    0.15555214    0.00063400;
+           0.88626278    2.31612414   -0.00125800;
+          -1.60888422    2.31618414   -0.00263100;
+          -2.85596722    0.15588014   -0.00086200] * angstrome
+
+   N = [6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1]
+   basis = generate_basis(N, R, genSTO3G)
+   RHF!(basis, [float(n) for n in N], R, 20)
+
+
+結論：Juliaでハートリー・フォック方程式を解けます。
+
+足りない所：今回のRHF!関数は全然実用的ではありません。収束条件も決めておらず、DIISも入っていないし、初期値もgues=coreであまり良いものではありません。
+また、原子核に働く力を計算するための積分も未実装なので構造最適出来ません。これは気が向いたら実装するかもしれません。
+また、今回のGaussianShell.jlにはd軌道の積分が入っておりません。これは、d軌道の二電子積分のコード量が莫大なため、コンパイル時間がかかり、嫌になって消してしまったからです。
+
+私自身まだJuliaについて全然分かっていない部分が多くあり、足りない所や間違っている所がたくさんあったと思います。もし疑問点やお気づきの点等がございましたら、まだこのサイトにはコメントを紐付けられていない故、大変お手数ですが https://twitter.com/hayashi_pc  までご連絡いただければ大変幸いです。
+
+
+
+最後まで読んで頂きありがとうございました。
+
+.. [1] Efficient recursive computation of molecular integrals over Cartesian Gaussian functions, Obara, Saika
+
+
+
+

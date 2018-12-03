@@ -3,18 +3,29 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to documentation!
+量子計算とか、
 =========================================
 
-工事中
+
+数値計算等について、作ったものを公開したり、気づいたことを書き連ねたりする予定です。
+サイトを公開すること自体初めてで勝手が分からず、後から変更等や削除等するかもれませんがよろしくお願いします。
+
+JuliaでHartree-Fock公開中
+
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   HF.rst
+   JuliaHF.rst
 
+
+Github
+https://github.com/akhdhys
+
+Twitter
+https://twitter.com/hayashi_pc
 
 Indices and tables
 ==================

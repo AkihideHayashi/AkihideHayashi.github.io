@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>JuliaでHartree-Fock &#8212; test_document 0.0.1 ドキュメント</title>
+    <title>Roothaan方程式 &#8212; test_document 0.0.1 ドキュメント</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="test_document 0.0.1 ドキュメント" href="index.html" />
-    <link rel="prev" title="数値計算に関するエトセトラ" href="index.html" />
+    <link rel="prev" title="JuliaでHartree-Fock" href="JuliaHF.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,26 +42,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="juliahartree-fock">
-<h1>JuliaでHartree-Fock<a class="headerlink" href="#juliahartree-fock" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>Hartree-Fock方程式は高精度に分子の電子状態を計算する手法の中で、一番入門的な方法です。
-中でも、Gaussian基底関数を用いた方法は分子に対する表現力が高く、しかも解析的に値が計算できるということで、最もスタンダードな手法となっています。
-Gauss基底を用いたHartree-Fock法を本格的に勉強するにはSzaboとOstlundの「新しい量子化学」がおすすめの書籍です。
-さて、Gauss基底を用いたHF法ではRhoothaan方程式を解くことになります。特に電子数が偶数個あるような状況の多くでは制限閉殻Hartree-Fock法(RHF)が良く使われます。
-理論と実装の両面からの理解が大切なのですが、残念ながら「新しい量子化学」に記載されているコードは水素やヘリウム等のS軌道しか持たない原子からなる原子にしか適用できません。
-問題はRhoothaan方程式に登場する行列の要素の計算です。
-Rhoothaan方程式では、演算子を基底関数で挟んで全空間積分したものを行列要素にします。
-S軌道以外の軌道に対してこの積分を評価するのは地味に大変な作業で、最も早くから使われてきた方法は小原積分と呼ばれる方法です。
-再帰的に、S軌道の積分を使ってP軌道の積分を評価し、P軌道の積分を使ってD軌道の積分を評価し……　という方法です。
-しかしこの方法は高速に実装しようとすると、ループや再帰などのコード量を節約できる方法はなかなか使いづらくなってしまいます。
-そこで、その面倒な部分をまとめたコードを作成したので、これを使ってHartree-Fock法を対話環境で実行します。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello World&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">print</span><span class="p">(</span><span class="s">&quot;KK&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Hartree-Fock方程式を対話形式で解く</p>
+  <div class="section" id="roothaan">
+<h1>Roothaan方程式<a class="headerlink" href="#roothaan" title="このヘッドラインへのパーマリンク">¶</a></h1>
 <p>時間非依存の <span class="math">\(\rm Schr\ddot{o}dinger\)</span> 方程式は以下のように表される。</p>
 <div class="math">
 \[\hat{H}\Psi=E\Psi\]</div>
@@ -112,14 +94,14 @@ Rhoothaan方程式では、基底関数を <span class="math">\(\phi_i\)</span> 
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="前の章へ">数値計算に関するエトセトラ</a></li>
+      <li>Previous: <a href="JuliaHF.html" title="前の章へ">JuliaでHartree-Fock</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>このページ</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/HF.txt"
+      <li><a href="_sources/Roothaan.txt"
             rel="nofollow">ソースコードを表示</a></li>
     </ul>
    </div>
@@ -145,7 +127,7 @@ Rhoothaan方程式では、基底関数を <span class="math">\(\phi_i\)</span> 
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
-      <a href="_sources/HF.txt"
+      <a href="_sources/Roothaan.txt"
           rel="nofollow">Page source</a>
     </div>
 
