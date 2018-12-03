@@ -113,7 +113,8 @@ juliaプロンプトで”]”を押すとpkgモードになるので、</p>
 </div>
 <p>とすれば私のgitからライブラリをインストールすることが出来ます。なお、消し方は良くわからなかったので、自己責任でお願いします。
 一応~/.julia内のディレクトリから一つ一つ消した上でPkg.rm(&#8220;GaussianShell&#8221;)とやれば消えてくれました。
-という具合なので一応、好きな所にダウンロードしてincludeすることを推奨しておきますが、includeする度に毎回コンパイルするとなるとコンパイル時間が気になるかもしれません。</p>
+という具合なので一応、好きな所にダウンロードしてincludeすることを推奨しておきます。その場合、<a class="reference external" href="https://github.com/akhdhys/GaussianShell.jl">https://github.com/akhdhys/GaussianShell.jl</a>
+から落として下さい。includeする度に毎回コンパイルするとなるとコンパイル時間が気になるかもしれません。</p>
 <p>インストールが完了したら、Jupyterで以下を実行していくことでHartree-Fock方程式を解くことが出来ます。</p>
 <p>適当なディレクトリに置いた場合は</p>
 <div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">include</span><span class="p">(</span><span class="s">&quot;GaussianShell.jl&quot;</span><span class="p">)</span>
