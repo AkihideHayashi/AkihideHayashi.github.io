@@ -247,6 +247,41 @@ Cに着目すると、結合性軌道も反結合性軌道も二つの係数は�
    basis = generate_basis(N, R, genSTO3G)
    RHF!(basis, [float(n) for n in N], R, 20)
 
+direct_scfでは中身が見えなくてつまらないので、最初に二電子積分を計算してメモリに保存し、SCFサイクル中は足すだけにするバージョンもつくれます。
+
+.. code-block:: julia
+
+function RHF_simple!(basis::Vector{Shell}, N::Vector{Float64}, R::Matrix{Float64}, n::Int64)
+    e_nrep = nuclear_repulsion(N, R)
+    n_occ = Integer(sum(N) / 2)
+    S, T, V = oneelectrons(basis, N, R)
+    e = eri(basis)
+    H = T .+ V
+    D = zeros(size(S))
+    G = zeros(size(S))
+    D .= H
+    C = zeros(size(S))
+    E = 0
+    for i in 1:n
+        G .= 0.0
+        for μ in 1:size(e, 1)
+            for ν in 1:size(e, 2)
+                for σ in 1:size(e, 3)
+                    for λ in 1:size(e, 4)
+                        G[μ, ν] += D[λ, σ] * (2 * e[μ, ν, σ, λ] - e[μ, λ, σ, ν])
+                    end
+                end
+            end
+        end
+        F = H + G
+        ϵ, C = eigen(Hermitian(F), Hermitian(S))
+        D .= C[:, 1:n_occ] * C[:, 1:n_occ]'
+        E = sum(diag(D * (2 * H + G)'))
+        println(i, " ", E + e_nrep)
+    end
+    E + e_nrep, C
+end
+
 
 結論：Juliaでハートリー・フォック方程式を解けます。
 
@@ -255,7 +290,7 @@ Cに着目すると、結合性軌道も反結合性軌道も二つの係数は�
 また、今回のGaussianShell.jlにはd軌道の積分が入っておりません。これは、d軌道の二電子積分のコード量が莫大なため、コンパイル時間がかかり、嫌になって消してしまったからです。
 
 私自身まだJuliaについてもこういったページを作ることについても全然分かっていない部分が多くあり、
-説明が足りない所や間違っている所がたくさんあったと思います。もし質問やお気づきの点等がございましたら、
+説明が足りない所や間違っている所がたくさんあったと思います。もし質問やお気づきの点、または感想等がございましたら、
 まだこのサイトにはコメントを紐付けられていない故、大変お手数ですが https://twitter.com/hayashi_pc  までご連絡いただければ大変幸いです。
 
 

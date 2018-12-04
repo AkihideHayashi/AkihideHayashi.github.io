@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="test_document 0.0.1 ドキュメント" href="index.html" />
-    <link rel="prev" title="量子計算とか" href="index.html" />
+    <link rel="prev" title="覚書" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -230,12 +230,61 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>direct_scfでは中身が見えなくてつまらないので、最初に二電子積分を計算してメモリに保存し、SCFサイクル中は足すだけにするバージョンもつくれます。</p>
+<div class="highlight-julia"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>function RHF_simple!(basis::Vector{Shell}, N::Vector{Float64}, R::Matrix{Float64}, n::Int64)</dt>
+<dd><p class="first">e_nrep = nuclear_repulsion(N, R)
+n_occ = Integer(sum(N) / 2)
+S, T, V = oneelectrons(basis, N, R)
+e = eri(basis)
+H = T .+ V
+D = zeros(size(S))
+G = zeros(size(S))
+D .= H
+C = zeros(size(S))
+E = 0
+for i in 1:n</p>
+<blockquote>
+<div><p>G .= 0.0
+for μ in 1:size(e, 1)</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for ν in 1:size(e, 2)</dt>
+<dd><dl class="first docutils">
+<dt>for σ in 1:size(e, 3)</dt>
+<dd><dl class="first docutils">
+<dt>for λ in 1:size(e, 4)</dt>
+<dd>G[μ, ν] += D[λ, σ] * (2 * e[μ, ν, σ, λ] - e[μ, λ, σ, ν])</dd>
+</dl>
+<p class="last">end</p>
+</dd>
+</dl>
+<p class="last">end</p>
+</dd>
+</dl>
+<p>end</p>
+</div></blockquote>
+<p>end
+F = H + G
+ϵ, C = eigen(Hermitian(F), Hermitian(S))
+D .= C[:, 1:n_occ] * C[:, 1:n_occ]&#8217;
+E = sum(diag(D * (2 * H + G)&#8217;))
+println(i, &#8221; &#8221;, E + e_nrep)</p>
+</div></blockquote>
+<p class="last">end
+E + e_nrep, C</p>
+</dd>
+</dl>
+<p>end</p>
 <p>結論：Juliaでハートリー・フォック方程式を解けます。</p>
 <p>足りない所：今回のRHF!関数は全然実用的ではありません。収束条件も決めておらず、DIISも入っていないし、初期値もgues=coreであまり良いものではありません。
 また、原子核に働く力を計算するための積分も未実装なので構造最適化出来ません。これは気が向いたら実装するかもしれません。
 また、今回のGaussianShell.jlにはd軌道の積分が入っておりません。これは、d軌道の二電子積分のコード量が莫大なため、コンパイル時間がかかり、嫌になって消してしまったからです。</p>
 <p>私自身まだJuliaについてもこういったページを作ることについても全然分かっていない部分が多くあり、
-説明が足りない所や間違っている所がたくさんあったと思います。もし質問やお気づきの点等がございましたら、
+説明が足りない所や間違っている所がたくさんあったと思います。もし質問やお気づきの点、または感想等がございましたら、
 まだこのサイトにはコメントを紐付けられていない故、大変お手数ですが <a class="reference external" href="https://twitter.com/hayashi_pc">https://twitter.com/hayashi_pc</a>  までご連絡いただければ大変幸いです。</p>
 <p>最後まで読んで頂きありがとうございました。</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
@@ -255,7 +304,7 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="前の章へ">量子計算とか</a></li>
+      <li>Previous: <a href="index.html" title="前の章へ">覚書</a></li>
   </ul></li>
 </ul>
 </div>
