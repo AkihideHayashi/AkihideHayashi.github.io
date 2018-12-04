@@ -231,54 +231,38 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 </pre></div>
 </div>
 <p>direct_scfでは中身が見えなくてつまらないので、最初に二電子積分を計算してメモリに保存し、SCFサイクル中は足すだけにするバージョンもつくれます。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span>
+<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="k">function</span><span class="nf"> RHF_simple</span><span class="o">!</span><span class="p">(</span><span class="n">basis</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="n">Shell</span><span class="p">},</span> <span class="n">N</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">R</span><span class="p">::</span><span class="n">Matrix</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">n</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span>
+    <span class="n">e_nrep</span> <span class="o">=</span> <span class="n">nuclear_repulsion</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+    <span class="n">n_occ</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">oneelectrons</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">eri</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">T</span> <span class="o">.+</span> <span class="n">V</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="n">D</span> <span class="o">.=</span> <span class="n">H</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span>
+        <span class="n">G</span> <span class="o">.=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">μ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ν</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">σ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">λ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                        <span class="n">G</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">]</span> <span class="o">+=</span> <span class="n">D</span><span class="p">[</span><span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">λ</span><span class="p">]</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">ν</span><span class="p">])</span>
+                    <span class="k">end</span>
+                <span class="k">end</span>
+            <span class="k">end</span>
+        <span class="k">end</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span>
+        <span class="n">ϵ</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="n">Hermitian</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="n">Hermitian</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">.=</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span><span class="o">&#39;</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">diag</span><span class="p">(</span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span><span class="p">)</span><span class="o">&#39;</span><span class="p">))</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="n">E</span> <span class="o">+</span> <span class="n">e_nrep</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="n">E</span> <span class="o">+</span> <span class="n">e_nrep</span><span class="p">,</span> <span class="n">C</span>
+<span class="k">end</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>function RHF_simple!(basis::Vector{Shell}, N::Vector{Float64}, R::Matrix{Float64}, n::Int64)</dt>
-<dd><p class="first">e_nrep = nuclear_repulsion(N, R)
-n_occ = Integer(sum(N) / 2)
-S, T, V = oneelectrons(basis, N, R)
-e = eri(basis)
-H = T .+ V
-D = zeros(size(S))
-G = zeros(size(S))
-D .= H
-C = zeros(size(S))
-E = 0
-for i in 1:n</p>
-<blockquote>
-<div><p>G .= 0.0
-for μ in 1:size(e, 1)</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>for ν in 1:size(e, 2)</dt>
-<dd><dl class="first docutils">
-<dt>for σ in 1:size(e, 3)</dt>
-<dd><dl class="first docutils">
-<dt>for λ in 1:size(e, 4)</dt>
-<dd>G[μ, ν] += D[λ, σ] * (2 * e[μ, ν, σ, λ] - e[μ, λ, σ, ν])</dd>
-</dl>
-<p class="last">end</p>
-</dd>
-</dl>
-<p class="last">end</p>
-</dd>
-</dl>
-<p>end</p>
-</div></blockquote>
-<p>end
-F = H + G
-ϵ, C = eigen(Hermitian(F), Hermitian(S))
-D .= C[:, 1:n_occ] * C[:, 1:n_occ]&#8217;
-E = sum(diag(D * (2 * H + G)&#8217;))
-println(i, &#8221; &#8221;, E + e_nrep)</p>
-</div></blockquote>
-<p class="last">end
-E + e_nrep, C</p>
-</dd>
-</dl>
-<p>end</p>
 <p>結論：Juliaでハートリー・フォック方程式を解けます。</p>
 <p>足りない所：今回のRHF!関数は全然実用的ではありません。収束条件も決めておらず、DIISも入っていないし、初期値もgues=coreであまり良いものではありません。
 また、原子核に働く力を計算するための積分も未実装なので構造最適化出来ません。これは気が向いたら実装するかもしれません。
