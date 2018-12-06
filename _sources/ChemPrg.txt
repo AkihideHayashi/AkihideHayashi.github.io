@@ -1,0 +1,16 @@
+Pythonのお勉強（数値計算）
+===============================================
+
+化学科の学生がPythonを勉強するために作成した資料です。
+化学に役立つことや基本的なアルゴリズムを通じてプログラムを書く考え方を身に着けることを目的としています。
+
+#.  `Pythonの文法 <https://github.com/akhdhys/ChemPrg/blob/master/01Pythonの文法.pdf>`_
+#.  `Pythonによるプログラム <https://github.com/akhdhys/ChemPrg/blob/master/02Pythonによるプログラム.pdf>`_
+#.  `Numpy <https://github.com/akhdhys/ChemPrg/blob/master/03Numpy.pdf>`_
+#.  `級数 <https://github.com/akhdhys/ChemPrg/blob/master/04級数.pdf>`_
+#.  `最小二乗法 <https://github.com/akhdhys/ChemPrg/blob/master/05最小二乗法.pdf>`_
+#.  `数値微分積分 <https://github.com/akhdhys/ChemPrg/blob/master/06数値微分積分.pdf>`_
+#.  `ニュートン法 <https://github.com/akhdhys/ChemPrg/blob/master/07ニュートン法.pdf>`_
+
+:doc:`index` 
+

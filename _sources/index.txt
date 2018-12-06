@@ -3,31 +3,26 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-覚書
-=========================================
+===============
+Akhdhysの資料集
+===============
 
 Webの勉強ついでに趣味で作ったものを公開しています。
 未完成なので随時更新していく予定です。
 
-Contents:
-
+Contents
+================
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   JuliaHF.rst
-
-
-
-
-Github
-https://github.com/akhdhys
-
-Twitter
-https://twitter.com/hayashi_pc
-
-
+    JuliaHF.rst
+    ChemPrg.rst
 
 初めて故勝手が分からず、後から変更や引っ越し等するかもれませんがよろしくお願いします。
+
+`GitHub <https://github.com/akhdhys>`_ 
+`Twitter <https://twitter.com/hayashi_pc>`_ 
+
 
 Indices and tables
 ==================
