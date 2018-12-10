@@ -16,7 +16,6 @@ Contents
     :maxdepth: 2
 
     JuliaHF.rst
-    ChemPrg.rst
 
 このページはGitHubを使って公開していますが、後から変更や引っ越し等するかもれませ。よろしくお願いします。
 
