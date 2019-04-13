@@ -1,31 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
+    <meta charset="utf-8" />
     <title>JuliaでHartree-Fock方程式 &#8212; test_document 0.0.1 ドキュメント</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="test_document 0.0.1 ドキュメント" href="index.html" />
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
     <link rel="next" title="Pythonのお勉強（数値計算）" href="ChemPrg.html" />
     <link rel="prev" title="Akhdhysの資料集" href="index.html" />
    
@@ -34,12 +24,36 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
+  </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">test_document</a></h1>
+
+
+
+<p class="blurb">aa</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=akhdhys&repo=GaussianShell&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>ナビゲーション</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">JuliaでHartree-Fock方程式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChemPrg.html">Pythonのお勉強（数値計算）</a></li>
+</ul>
+
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -48,113 +62,116 @@
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>このページ</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/JuliaHF.txt"
-            rel="nofollow">ソースコードを表示</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>クイック検索</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="検索" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="juliahartree-fock">
 <h1>JuliaでHartree-Fock方程式<a class="headerlink" href="#juliahartree-fock" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>Gauss基底では三次元のGauss関数(GF)に必要に応じて方向成分としてx,y,zを掛けたものを使います。一番簡単なのはs軌道の場合で、方向成分なしで、原子核が位置 <span class="math">\(\mathbf{R}_A\)</span> にある時、以下のようになります。</p>
-<div class="math">
+<p>Gauss基底では三次元のGauss関数(GF)に必要に応じて方向成分としてx,y,zを掛けたものを使います。一番簡単なのはs軌道の場合で、方向成分なしで、原子核が位置 <span class="math notranslate nohighlight">\(\mathbf{R}_A\)</span> にある時、以下のようになります。</p>
+<div class="math notranslate nohighlight">
 \[\phi_s^{GF}\left(\zeta,\mathbf{r}-\mathbf{R}_A\right)=C\exp{\left(-\zeta\left|\mathbf{r}-\mathbf{R}_A\right|^2\right)}\]</div>
 <p>ただし、ここでCは規格化定数、zetaは軌道指数です。
 p軌道やd軌道等の場合、</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\phi_{p_x}^{GF}\left(\zeta,\mathbf{r}-\mathbf{R}_A\right)=C\left(x-x_A\right)\exp{\left(-\zeta\left|\mathbf{r}-\mathbf{R}_A\right|^2\right)}\]</div>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\phi_{d_{xy}}^{GF}\left(\zeta,\mathbf{r}-\mathbf{R}_A\right)=C\left(x-x_A\right)\left(y-y_A\right)\exp{\left(-\zeta\left|\mathbf{r}-\mathbf{R}_A\right|^2\right)}\]</div>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\phi_{d_{xx}}^{GF}\left(\zeta,\mathbf{r}-\mathbf{R}_A\right)=C\left(x-x_A\right)^2\exp{\left(-\zeta\left|\mathbf{r}-\mathbf{R}_A\right|^2\right)}\]</div>
 <p>等となります。これを一般化すると、以下のようになります。</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\phi_l^{GF}\left(\zeta,\mathbf{r}-\mathbf{R}_A\right)=C\left(x-x_A\right)^{l_x}\left(y-y_A\right)^{l_y}\left(z-z_A\right)^{l_z}\exp{\left(-\zeta\left|\mathbf{r}-\mathbf{R}_A\right|^2\right)}\]</div>
-<p>ここで、 <span class="math">\(l_x+l_y+l_z\)</span> が0ならs軌道、1ならp軌道、2ならd軌道です。
+<p>ここで、 <span class="math notranslate nohighlight">\(l_x+l_y+l_z\)</span> が0ならs軌道、1ならp軌道、2ならd軌道です。
 さらに同じ中心で異なる軌道指数のガウス関数を3~6個くらい線形結合をとることで単原子の軌道に近い軌道を表現します。これを縮約ガウス関数(CGF)と言います。</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\phi_l^{CGF}\left(\mathbf{r}-\mathbf{R}_A\right)=\sum_{p=1}^{P}{C_{lp}\phi_l^{GF}\left(\zeta_p,\mathbf{r}-\mathbf{R}_A\right)}\]</div>
-<p>ここで、 <span class="math">\(C_{lp}\)</span> は縮約係数です。</p>
+<p>ここで、 <span class="math notranslate nohighlight">\(C_{lp}\)</span> は縮約係数です。</p>
 <p>Szabo and Ostlundの「新しい量子化学」3章の内容ですが、ガウス基底のHartree-Fock方程式と言った場合、典型的にはRoothaan方程式を解くことになります。特に閉殻制限HFの場合、</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\bf FC=SCϵ\]</div>
-<p>という一般化固有値問題を解き、得られた行列 <span class="math">\(\bf C\)</span> が分子軌道の係数となります。ただし、ここで、</p>
-<p><span class="math">\(\bf S\)</span> はオーバーラップ積分で</p>
-<div class="math">
+<p>という一般化固有値問題を解き、得られた行列 <span class="math notranslate nohighlight">\(\bf C\)</span> が分子軌道の係数となります。ただし、ここで、</p>
+<p><span class="math notranslate nohighlight">\(\bf S\)</span> はオーバーラップ積分で</p>
+<div class="math notranslate nohighlight">
 \[S_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1\phi_\mu^*(\mathbf{r}_1)\phi_\nu(\mathbf{r}_1)}\]</div>
-<p><span class="math">\(\bf F\)</span> はフォック行列で</p>
-<div class="math">
+<p><span class="math notranslate nohighlight">\(\bf F\)</span> はフォック行列で</p>
+<div class="math notranslate nohighlight">
 \[F_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\frac{1}{2m}\nabla^2_{\mathbf{r}_1}-\sum_A{\frac{Z_A}{|\mathbf{r}_1-\mathbf{R}_A|}}] \phi_\nu(\mathbf{r}_1)}+2 \sum_a^{N/2}{\sum_{\lambda\sigma}{C_{\lambda a}C_{\sigma a}^*[(\mu\nu|\sigma\lambda)-\frac{1}{2}(\mu\lambda|\sigma\nu)]}}\]</div>
-<p>という形をしています。Aに関する和が登場しますが、これは原子核に関する和です。 <span class="math">\(\mu\nu\lambda\sigma\)</span> は電子の基底に関するインデックスです。
-<span class="math">\(\phi_\mu^*(\mathbf{r}_1)\)</span> 等は縮約ガウス関数と思って良いです。
-フォック行列の定義に出て来る <span class="math">\((\mu\nu|\sigma\lambda)\)</span> は二電子積分で</p>
-<div class="math">
+<p>という形をしています。Aに関する和が登場しますが、これは原子核に関する和です。 <span class="math notranslate nohighlight">\(\mu\nu\lambda\sigma\)</span> は電子の基底に関するインデックスです。
+<span class="math notranslate nohighlight">\(\phi_\mu^*(\mathbf{r}_1)\)</span> 等は縮約ガウス関数と思って良いです。
+フォック行列の定義に出て来る <span class="math notranslate nohighlight">\((\mu\nu|\sigma\lambda)\)</span> は二電子積分で</p>
+<div class="math notranslate nohighlight">
 \[(\mu\nu|\sigma\lambda) = \int{\mathrm{d}\mathbf{r}_1\mathrm{d}\mathbf{r}_2\frac{\phi^*_\mu(\mathbf{r}_1)\phi_\nu(\mathbf{r}_1)\phi^*_\lambda(\mathbf{r}_2)\phi_\sigma(\mathbf{r}_2)}{|\mathbf{r}_1-\mathbf{r}_2|}}\]</div>
-<p>です。また、 <span class="math">\(\bf \epsilon\)</span> は対角行列になります。演算子 <span class="math">\(\bf F\)</span> が <span class="math">\(\bf C\)</span> にあらわに依存している非線形方程式の形をしているため、 <span class="math">\(\bf F\)</span> に用いた <span class="math">\(\bf C\)</span> が固有値問題の解となるような <span class="math">\(\bf C\)</span> が得られるまで繰り返し方程式を解いていきます(SCF)。</p>
+<p>です。また、 <span class="math notranslate nohighlight">\(\bf \epsilon\)</span> は対角行列になります。演算子 <span class="math notranslate nohighlight">\(\bf F\)</span> が <span class="math notranslate nohighlight">\(\bf C\)</span> にあらわに依存している非線形方程式の形をしているため、 <span class="math notranslate nohighlight">\(\bf F\)</span> に用いた <span class="math notranslate nohighlight">\(\bf C\)</span> が固有値問題の解となるような <span class="math notranslate nohighlight">\(\bf C\)</span> が得られるまで繰り返し方程式を解いていきます(SCF)。</p>
 <p>この式はいくつかの項に分解することで見通し良くプログラムを書くことが出来、以下のように分解します。</p>
 <p>フォック行列</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[F_{\mu\nu} = H^{\rm core}_{\mu\nu} + G_{\mu\nu}\]</div>
 <p>コアハミルトニアン</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[H^{\rm core}_{\mu\nu} = T_{\mu\nu} + V_{\mu\nu}\]</div>
 <p>運動エネルギー積分</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[T_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\frac{1}{2m}\nabla^2_{\mathbf{r}_1}] \phi_\nu(\mathbf{r}_1)}\]</div>
 <p>核引力積分</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[V_{\mu\nu} = \int{\mathrm{d}\mathbf{r}_1 \phi_\mu^*(\mathbf{r}_1)[-\sum_A{\frac{Z_A}{|\mathbf{r}_1-\mathbf{R}_A|}}] \phi_\nu(\mathbf{r}_1)}\]</div>
 <p>フォック行列の二電子部分</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[G_{\mu\nu} = \sum_{\lambda\sigma}{D_{\lambda\sigma}[(\mu\nu|\sigma\lambda)-\frac{1}{2}(\mu\lambda|\sigma\nu)]}\]</div>
 <p>密度行列</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[D_{\lambda\sigma} = 2 \sum_{a}^{N/2}{C_{\lambda a}C^*_{\sigma a}}\]</div>
 <p>と分解します。二電子部分はクーロン項（前半）と交換項（後半）から成り立っています。
 計算する時は、</p>
 <ol class="arabic simple">
-<li><span class="math">\(S_{\mu\nu}\)</span> と <span class="math">\(T_{\mu\nu}\)</span> と <span class="math">\(V_{\mu\nu}\)</span> を計算</li>
-<li><span class="math">\(H^{\rm core}_{\mu\nu}\)</span> を計算</li>
-<li>適当に <span class="math">\(F_{\mu\nu}\)</span> を初期化。今回は <span class="math">\(H^{\rm core}_{\mu\nu}\)</span> と同じにしました。</li>
-<li><span class="math">\(F_{\mu\nu}\)</span> を対角化し、固有ベクトルが格納された行列 <span class="math">\(\mathbf{C}\)</span> を得る。</li>
-<li><span class="math">\(\mathbf{C}\)</span> から <span class="math">\(D_{\lambda\sigma}\)</span> を計算</li>
-<li><span class="math">\(D_{\lambda\sigma}\)</span> と二電子積分から <span class="math">\(G_{\lambda\sigma}\)</span> を計算。二電子積分はメモリに乗らないことが多く、今回は毎回計算する。</li>
-<li><span class="math">\(F_{\mu\nu}\)</span> を計算。4へ戻る</li>
+<li><p><span class="math notranslate nohighlight">\(S_{\mu\nu}\)</span> と <span class="math notranslate nohighlight">\(T_{\mu\nu}\)</span> と <span class="math notranslate nohighlight">\(V_{\mu\nu}\)</span> を計算</p></li>
+<li><p><span class="math notranslate nohighlight">\(H^{\rm core}_{\mu\nu}\)</span> を計算</p></li>
+<li><p>適当に <span class="math notranslate nohighlight">\(F_{\mu\nu}\)</span> を初期化。今回は <span class="math notranslate nohighlight">\(H^{\rm core}_{\mu\nu}\)</span> と同じにしました。</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{\mu\nu}\)</span> を対角化し、固有ベクトルが格納された行列 <span class="math notranslate nohighlight">\(\mathbf{C}\)</span> を得る。</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{C}\)</span> から <span class="math notranslate nohighlight">\(D_{\lambda\sigma}\)</span> を計算</p></li>
+<li><p><span class="math notranslate nohighlight">\(D_{\lambda\sigma}\)</span> と二電子積分から <span class="math notranslate nohighlight">\(G_{\lambda\sigma}\)</span> を計算。二電子積分はメモリに乗らないことが多く、今回は毎回計算する。</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{\mu\nu}\)</span> を計算。4へ戻る</p></li>
 </ol>
 <p>を繰り返すことになります。
 さて、これらを実装しようとした時、ネックは各行列の要素の計算となります。逆に言うと、この部分さえ突破出来ればRoothaan方程式の実装は非常に簡単です。
-そこで、Juliaで積分を実装してみました。参考にしたのは小原積分 <a class="footnote-reference" href="#id2" id="id1">[1]</a> です。この方法では、S軌道の積分を使ってP軌道の積分を計算し、P軌道の積分を使ってD軌道の積分を計算するという具合です。</p>
+そこで、Juliaで積分を実装してみました。参考にしたのは小原積分 <a class="footnote-reference brackets" href="#id2" id="id1">1</a> です。この方法では、S軌道の積分を使ってP軌道の積分を計算し、P軌道の積分を使ってD軌道の積分を計算するという具合です。</p>
 <p>GaussianShell.jl という名前で <a class="reference external" href="https://github.com/akhdhys/GaussianShell.jl">https://github.com/akhdhys/GaussianShell.jl</a> に登録しています。
 gitからインストールするか、適当なディレクトリにダウンロードしてincludeして使うことが出来ます。
 gitからインストールする場合、juliaプロンプトで”]”を押すとpkgモードになるので、</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="p">]</span> <span class="n">add</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">akhdhys</span><span class="o">/</span><span class="n">GaussianShell</span><span class="o">.</span><span class="n">jl</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="p">]</span> <span class="n">add</span> <span class="n">https</span><span class="o">://</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">akhdhys</span><span class="o">/</span><span class="n">GaussianShell</span><span class="o">.</span><span class="n">jl</span>
 </pre></div>
 </div>
 <p>とすればgitからライブラリをインストールすることが出来ます。</p>
 <p>インストールが完了したら、Jupyterで以下を実行していくことでHartree-Fock方程式を解くことが出来ます。</p>
 <p>適当なディレクトリに置いた場合はまず</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">include</span><span class="p">(</span><span class="s">&quot;GaussianShell.jl&quot;</span><span class="p">)</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">include</span><span class="p">(</span><span class="s">&quot;GaussianShell.jl&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>を行います。あとは共通です。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="n">LinearAlgebra</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="n">LinearAlgebra</span>
 <span class="k">using</span> <span class="n">GaussianShell</span>
 </pre></div>
 </div>
@@ -163,9 +180,9 @@ gitからインストールする場合、juliaプロンプトで”]”を押�
 ガウス基底の積分はS軌道の積分を使ってP軌道の積分を計算するというアルゴリズムの都合上、2Sと2Pで同じ軌道指数を使います。縮約係数は違うものを使います。
 同じ軌道指数を使ったCGFをまとめてShellと呼びます。例えば、2sと2pをまとめたもの等がShellです。
 以下で定義するgenerate_basis関数はShellのArrayを返します。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">angstrome</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">0.52917721067</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">angstrome</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">0.52917721067</span>
 
-<span class="k">function</span><span class="nf"> genSTO3G</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">genSTO3G</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
         <span class="p">[([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.42525091</span> <span class="mf">0.15432897</span><span class="p">;</span>  <span class="c"># [0]はs軌道を使うの意味。後半の一列目は軌道指数、二列目は縮約係数</span>
                 <span class="mf">0.62391373</span> <span class="mf">0.53532814</span><span class="p">;</span>
@@ -185,19 +202,19 @@ gitからインストールする場合、juliaプロンプトで”]”を押�
                    <span class="mf">1.1695961</span>  <span class="mf">0.39951283</span>  <span class="mf">0.60768372</span><span class="p">;</span>
                    <span class="mf">0.3803890</span>  <span class="mf">0.70011547</span>  <span class="mf">0.39195739</span><span class="p">])]</span>
     <span class="k">else</span>
-        <span class="nb">error</span><span class="p">()</span>
+        <span class="n">error</span><span class="p">()</span>
     <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">generate_basis</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="n">Shell</span><span class="p">(</span><span class="n">cg</span><span class="o">...</span><span class="p">,</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">cg</span> <span class="k">in</span> <span class="n">b</span><span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+<span class="n">generate_basis</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="n">Shell</span><span class="p">(</span><span class="n">cg</span><span class="o">...</span><span class="p">,</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">:</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">cg</span> <span class="kp">in</span> <span class="n">b</span><span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
 </pre></div>
 </div>
 <p>RHFのRoothaan方程式のメインループです。direct_rhf!はG行列を生成し、与えられたG行列に上書きする関数です。
 G行列の生成は二電子積分に依存しますが、二電子積分は基底の数の4乗のオーダーで増えるのでメモリに保存するのが辛い量です。
 なので、足し算の順番を変えることでうまく一回のSCFにつき各一回だけ計算することができ、それをdirect scfと言います。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="k">function</span><span class="nf"> RHF</span><span class="o">!</span><span class="p">(</span><span class="n">basis</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="n">Shell</span><span class="p">},</span> <span class="n">N</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">R</span><span class="p">::</span><span class="n">Matrix</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">n</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="n">Shell</span><span class="p">},</span> <span class="n">N</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">R</span><span class="o">::</span><span class="kt">Matrix</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">n</span><span class="o">::</span><span class="kt">Int64</span><span class="p">)</span>
     <span class="n">e_nrep</span> <span class="o">=</span> <span class="n">nuclear_repulsion</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
-    <span class="n">n_occ</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">n_occ</span> <span class="o">=</span> <span class="kt">Integer</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">oneelectrons</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">T</span> <span class="o">.+</span> <span class="n">V</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
@@ -205,11 +222,11 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
     <span class="n">C</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
     <span class="n">E</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">D</span> <span class="o">.=</span> <span class="n">H</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span>
         <span class="n">direct_rhf!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span>
         <span class="n">F</span> <span class="o">=</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span>
-        <span class="n">ϵ</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="n">Hermitian</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="n">Hermitian</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
-        <span class="n">D</span> <span class="o">.=</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span><span class="o">&#39;</span>
+        <span class="n">ϵ</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="kt">Hermitian</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="kt">Hermitian</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">.=</span> <span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="o">:</span><span class="n">n_occ</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="o">:</span><span class="n">n_occ</span><span class="p">]</span><span class="o">&#39;</span>
         <span class="n">E</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">diag</span><span class="p">(</span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span><span class="p">)</span><span class="o">&#39;</span><span class="p">))</span>
         <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="n">E</span> <span class="o">+</span> <span class="n">e_nrep</span><span class="p">)</span>
     <span class="k">end</span>
@@ -218,30 +235,30 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 </pre></div>
 </div>
 <p>とりあえず、水素を計算してみましょう。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0000000000000000</span>       <span class="mf">0.000000000000000</span>        <span class="mf">0.00000</span><span class="p">;</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0000000000000000</span>       <span class="mf">0.000000000000000</span>        <span class="mf">0.00000</span><span class="p">;</span>
      <span class="mf">0.0000000000000000</span>       <span class="mf">0.000000000000000</span>        <span class="mf">0.7414</span><span class="p">]</span> <span class="o">*</span> <span class="n">angstrome</span>    <span class="c"># 座標です。</span>
 <span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　 <span class="c"># 水素の陽子数は1です。</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">generate_basis</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">genSTO3G</span><span class="p">)</span>
 
-<span class="n">E</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">E</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="kp">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Cに着目すると、結合性軌道も反結合性軌道も二つの係数はそれぞれ同じで、結合性軌道は同符号、反結合性軌道は異符号となっていることがわかります。</p>
 <p>次は水を計算してみます。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0000000000000000</span>       <span class="o">-</span><span class="mf">0.14322234298078604</span>        <span class="mf">0.00000</span><span class="p">;</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0000000000000000</span>       <span class="o">-</span><span class="mf">0.14322234298078604</span>        <span class="mf">0.00000</span><span class="p">;</span>
      <span class="mf">1.6380335020342411</span>        <span class="mf">1.13655688035841070</span>        <span class="mf">0.00000</span><span class="p">;</span>
     <span class="o">-</span><span class="mf">1.6380335020342411</span>        <span class="mf">1.13655688035841070</span>        <span class="mf">0.00000</span><span class="p">]</span>
 <span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">generate_basis</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">genSTO3G</span><span class="p">)</span>
 
-<span class="n">C</span> <span class="o">=</span> <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="kp">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>この座標はGaussianでの構造最適化済の値を入力しており、Gaussianの計算結果と同じ、-74.942Hartreeのエネルギーになるはずです。
 最後に、ベンゼンですが、これは少し重いです。というのも、二電子積分の計算はboys関数を毎回計算します。
 今回の実装ではboys関数の実装を引数に応じて分けて実装しており、最適化の完了していない領域があります。
 ベンゼンの計算ではその最適化出来ていない部分を踏むようです。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span>   <span class="p">[</span><span class="o">-</span><span class="mf">1.05898122</span>   <span class="o">-</span><span class="mf">1.05227886</span>    <span class="mf">0.00000000</span><span class="p">;</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span>   <span class="p">[</span><span class="o">-</span><span class="mf">1.05898122</span>   <span class="o">-</span><span class="mf">1.05227886</span>    <span class="mf">0.00000000</span><span class="p">;</span>
         <span class="mf">0.33617878</span>   <span class="o">-</span><span class="mf">1.05227886</span>    <span class="mf">0.00000000</span><span class="p">;</span>
         <span class="mf">1.03371678</span>    <span class="mf">0.15547214</span>    <span class="mf">0.00000000</span><span class="p">;</span>
         <span class="mf">0.33606278</span>    <span class="mf">1.36398114</span>   <span class="o">-</span><span class="mf">0.00119900</span><span class="p">;</span>
@@ -256,35 +273,35 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 
 <span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">generate_basis</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">genSTO3G</span><span class="p">)</span>
-<span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">RHF!</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="p">[</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="kp">in</span> <span class="n">N</span><span class="p">],</span> <span class="n">R</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>direct_scfでは中身が見えなくてつまらないので、最初に二電子積分を計算してメモリに保存し、SCFサイクル中は足すだけにするバージョンもつくれます。</p>
-<div class="highlight-julia"><div class="highlight"><pre><span></span><span class="k">function</span><span class="nf"> RHF_simple</span><span class="o">!</span><span class="p">(</span><span class="n">basis</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="n">Shell</span><span class="p">},</span> <span class="n">N</span><span class="p">::</span><span class="n">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">R</span><span class="p">::</span><span class="n">Matrix</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">n</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> <span class="n">RHF_simple!</span><span class="p">(</span><span class="n">basis</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="n">Shell</span><span class="p">},</span> <span class="n">N</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">R</span><span class="o">::</span><span class="kt">Matrix</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> <span class="n">n</span><span class="o">::</span><span class="kt">Int64</span><span class="p">)</span>
     <span class="n">e_nrep</span> <span class="o">=</span> <span class="n">nuclear_repulsion</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
-    <span class="n">n_occ</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">n_occ</span> <span class="o">=</span> <span class="kt">Integer</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">oneelectrons</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
-    <span class="n">e</span> <span class="o">=</span> <span class="n">eri</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
+    <span class="nb">e</span> <span class="o">=</span> <span class="n">eri</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">T</span> <span class="o">.+</span> <span class="n">V</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
     <span class="n">D</span> <span class="o">.=</span> <span class="n">H</span>
     <span class="n">C</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
     <span class="n">E</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span>
         <span class="n">G</span> <span class="o">.=</span> <span class="mf">0.0</span>
-        <span class="k">for</span> <span class="n">μ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">ν</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">σ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">λ</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-                        <span class="n">G</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">]</span> <span class="o">+=</span> <span class="n">D</span><span class="p">[</span><span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">λ</span><span class="p">]</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">ν</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">μ</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ν</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">σ</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">λ</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                        <span class="n">G</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">]</span> <span class="o">+=</span> <span class="n">D</span><span class="p">[</span><span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">ν</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">λ</span><span class="p">]</span> <span class="o">-</span> <span class="nb">e</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">ν</span><span class="p">])</span>
                     <span class="k">end</span>
                 <span class="k">end</span>
             <span class="k">end</span>
         <span class="k">end</span>
         <span class="n">F</span> <span class="o">=</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span>
-        <span class="n">ϵ</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="n">Hermitian</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="n">Hermitian</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
-        <span class="n">D</span> <span class="o">.=</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_occ</span><span class="p">]</span><span class="o">&#39;</span>
+        <span class="n">ϵ</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="kt">Hermitian</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="kt">Hermitian</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">.=</span> <span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="o">:</span><span class="n">n_occ</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="o">:</span><span class="n">n_occ</span><span class="p">]</span><span class="o">&#39;</span>
         <span class="n">E</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">diag</span><span class="p">(</span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">H</span> <span class="o">+</span> <span class="n">G</span><span class="p">)</span><span class="o">&#39;</span><span class="p">))</span>
         <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="n">E</span> <span class="o">+</span> <span class="n">e_nrep</span><span class="p">)</span>
     <span class="k">end</span>
@@ -300,17 +317,17 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
 説明が足りない所や間違っている所がたくさんあったと思います。もし質問やお気づきの点、または感想等がございましたら、
 まだこのサイトにはコメントを紐付けられていない故、大変お手数ですが <a class="reference external" href="https://twitter.com/hayashi_pc">https://twitter.com/hayashi_pc</a>  までご連絡いただければ大変幸いです。</p>
 <p>最後まで読んで頂きありがとうございました。</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Efficient recursive computation of molecular integrals over Cartesian Gaussian functions, Obara, Saika</td></tr>
-</tbody>
-</table>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Efficient recursive computation of molecular integrals over Cartesian Gaussian functions, Obara, Saika</p>
+</dd>
+</dl>
 <p><a class="reference internal" href="index.html"><span class="doc">Akhdhysの資料集</span></a></p>
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -319,11 +336,11 @@ G行列の生成は二電子積分に依存しますが、二電子積分は基�
       &copy;2018, Akhdhys.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/JuliaHF.txt"
+      <a href="_sources/JuliaHF.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
