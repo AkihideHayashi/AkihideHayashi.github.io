@@ -1,31 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
+    <meta charset="utf-8" />
     <title>Pythonのお勉強（数値計算） &#8212; test_document 0.0.1 ドキュメント</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="test_document 0.0.1 ドキュメント" href="index.html" />
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
     <link rel="prev" title="JuliaでHartree-Fock方程式" href="JuliaHF.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,12 +23,36 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
+  </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">test_document</a></h1>
+
+
+
+<p class="blurb">aa</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=akhdhys&repo=GaussianShell&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>ナビゲーション</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="JuliaHF.html">JuliaでHartree-Fock方程式</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pythonのお勉強（数値計算）</a></li>
+</ul>
+
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -46,27 +60,30 @@
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>このページ</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/ChemPrg.txt"
-            rel="nofollow">ソースコードを表示</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>クイック検索</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="検索" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="python">
@@ -79,21 +96,23 @@
 <div class="line">もし質問等があれば、<a class="reference external" href="https://twitter.com/hayashi_pc">https://twitter.com/hayashi_pc</a> までご連絡いただくか、 大阪大学の学生であれば総合図書館ラーニングコモンズにて月曜日の11:00-13:00及び木曜日の15:00-17:00にて受け付けます。</div>
 </div>
 <blockquote>
-<div><a class="reference external" href="https://github.com/akhdhys/ChemPrg">目次</a></div></blockquote>
+<div><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg">目次</a></p>
+</div></blockquote>
 <ol class="arabic simple">
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/01Pythonの文法.pdf">Pythonの文法</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/02Pythonによるプログラム.pdf">Pythonによるプログラム</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/03Numpy.pdf">Numpy</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/04級数.pdf">級数</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/05最小二乗法.pdf">最小二乗法</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/06数値微分積分.pdf">数値微分積分</a></li>
-<li><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/07ニュートン法.pdf">ニュートン法</a></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/01Pythonの文法.pdf">Pythonの文法</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/02Pythonによるプログラム.pdf">Pythonによるプログラム</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/03Numpy.pdf">Numpy</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/04級数.pdf">級数</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/05最小二乗法.pdf">最小二乗法</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/06数値微分積分.pdf">数値微分積分</a></p></li>
+<li><p><a class="reference external" href="https://github.com/akhdhys/ChemPrg/blob/master/07ニュートン法.pdf">ニュートン法</a></p></li>
 </ol>
 <p><a class="reference internal" href="index.html"><span class="doc">Akhdhysの資料集</span></a></p>
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -102,11 +121,11 @@
       &copy;2018, Akhdhys.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/ChemPrg.txt"
+      <a href="_sources/ChemPrg.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
