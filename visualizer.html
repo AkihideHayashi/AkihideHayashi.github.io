@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/visualizer.css">
+        <link rel="stylesheet" type="text/css" href="css/ddmenu.css">
+        <title>Visualizer</title>
+    </head>
+
+    <body>
+        <ul class="ddmenu">
+            <li><a>File</a>
+                <ul>
+                    <li><a id="download">Download</a></li>
+                </ul>
+            </li>
+            <li><a>Edit</a>
+                <ul>
+                    <li><a id="clear">Clear</a></li>
+                </ul>
+            </li>
+            <li><a href="index.html">TopPage</a></li>
+        </ul>
+
+        <canvas id="visualizer" draggable="true" ondragover="event.preventDefault();"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+        <script src="js/FileSaver.min.js"></script>
+        <script src="js/visualizer.js"></script>
+        <script>
+            window.addEventListener('load', ()=>init_visualizer());
+            function init_visualizer() {
+                const canvas = document.querySelector('#visualizer');
+                const visualizer = new Visualizer(canvas);
+                window.ondrop = visualizer.ondrop.bind(visualizer);
+                window.onresize = visualizer.onresize.bind(visualizer);
+                canvas.onwheel = visualizer.onwheel.bind(visualizer);
+                canvas.onmouseup = visualizer.onmouseup.bind(visualizer);
+                canvas.onmousemove = visualizer.onmousemove.bind(visualizer);
+                canvas.onmousedown = visualizer.onmousedown.bind(visualizer);
+                document.getElementById('clear').addEventListener('click', visualizer.clear.bind(visualizer));
+                document.getElementById('download').addEventListener('click', (_)=>visualizer.download());
+
+                visualizer.onresize(null);
+                visualizer.sync_camera_light();
+                visualizer.tick();
+            }
+        </script>
+    </body>
+</html>

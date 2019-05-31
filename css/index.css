@@ -1,0 +1,41 @@
+body{
+    margin: 0px 0px 0px 0px;
+    background-color: cadetblue;
+}
+
+object{
+    width: 80%;
+    height: 100%;
+    background-size: cover;
+    background: snow;
+}
+
+div.main{
+    margin: 0% 5% 0% 5%;
+    background: snow;
+    background-size: cover;
+}
+
+div.main div{
+    margin: 5%;
+}
+
+h1{
+    display: block;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    background-color: azure;
+    text-align: center;
+}
+
+h2 a{
+   color: black;
+   line-height: 40px;
+   text-decoration: none;
+   font-weight: bold;
+   display: block;
+}
+
+h2 a:hover{
+    color: darkgray;
+}
