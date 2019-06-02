@@ -20,7 +20,10 @@
                     <li><a id="clear">Clear</a></li>
                 </ul>
             </li>
-            <li><a href="index.html">TopPage</a></li>
+            <li><a id="prev">Prev</a></li>
+            <li><a id="next">Next</a></li>
+            <li><a id="animation">Animation</a></li>
+            <li><a href="https://akhdhys.github.io/">Top</a></li>
         </ul>
 
         <canvas id="visualizer" draggable="true" ondragover="event.preventDefault();"></canvas>
@@ -28,23 +31,141 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
         <script src="js/FileSaver.min.js"></script>
         <script src="js/visualizer.js"></script>
+        <script src="js/input.js"></script>
+        <script src="js/objects.js"></script>
+        <script src="js/mousetracker.js"></script>
+        <script src="js/selectionbox.js"></script>
+        <script src="js/intersection.js"></script>
+        <script src="js/rotation.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/cell.js"></script>
         <script>
+            const mode = {
+            normal: 0,
+            select: 1,
+            rotate_camera: 2,
+            translate_camera: 3,
+            rotate_atoms: 4,
+            translate_atoms: 5,
+            }
+
             window.addEventListener('load', ()=>init_visualizer());
             function init_visualizer() {
+                let current_mode = mode.normal;
+                let animation = false;
                 const canvas = document.querySelector('#visualizer');
-                const visualizer = new Visualizer(canvas);
-                window.ondrop = visualizer.ondrop.bind(visualizer);
-                window.onresize = visualizer.onresize.bind(visualizer);
-                canvas.onwheel = visualizer.onwheel.bind(visualizer);
-                canvas.onmouseup = visualizer.onmouseup.bind(visualizer);
-                canvas.onmousemove = visualizer.onmousemove.bind(visualizer);
-                canvas.onmousedown = visualizer.onmousedown.bind(visualizer);
-                document.getElementById('clear').addEventListener('click', visualizer.clear.bind(visualizer));
-                document.getElementById('download').addEventListener('click', (_)=>visualizer.download());
+                const visualizer = new Visualizer(canvas, "selectBox");
+                const mouse_tracker = new MouseTracker(canvas);
+                window.addEventListener('resize', ()=>visualizer.onresize());
+                canvas.addEventListener('mousedown', onmousedown, false);
+                canvas.addEventListener('mousemove', onmousemove, false);
+                canvas.addEventListener('mouseup', onmouseup, false);
+                canvas.addEventListener('wheel', onwheel, false);
+                canvas.addEventListener('dblclick', ondblclick, false);
+                window.addEventListener('drop', ondrop, false)
+                document.getElementById('clear').addEventListener('click', (_)=>visualizer.clear());
+                document.getElementById('download').addEventListener('click', (_)=>download());
+                document.getElementById('next').addEventListener('click', (_)=>visualizer.next());
+                document.getElementById('prev').addEventListener('click', (_)=>visualizer.prev());
+                document.getElementById('animation').addEventListener('click', (_)=>toggle_animation());
+                tick();
+                function toggle_animation(){
+                    animation = !animation;
+                    requestAnimationFrame(()=>continue_animation());
+                }
+                function continue_animation(){
+                    if(animation){
+                        visualizer.next();
+                        setTimeout(()=>continue_animation(), 50);
+                    }
+                }
+                function tick(){
+                    visualizer.render();
+                    requestAnimationFrame(()=>tick());
+                }
+                function onmousedown(event){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    mouse_tracker.track(event);
+                    const grabable = visualizer.grabable(mouse_tracker.new);
+                    const selected = visualizer.selected_atoms.length > 0;
+                    if(event.altKey){
+                        if(selected && grabable){
+                            current_mode = mode.translate_atoms;
+                        }else{
+                            current_mode = mode.translate_camera;
+                        }
+                    }else if(event.shiftKey){
+                        console.log(event);
+                        current_mode = mode.select;
+                        visualizer.open_selection(event, mouse_tracker.new);
+                    }else{
+                        if(selected && grabable){
+                            current_mode = mode.rotate_atoms;
+                        }else{
+                            current_mode = mode.rotate_camera;
+                        }
+                    }
+                }
+                function onmousemove(event){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    mouse_tracker.track(event);
+                    if(current_mode == mode.rotate_camera){
+                        visualizer.rotate_camera(mouse_tracker);
+                    }else if(current_mode == mode.translate_camera){
+                        visualizer.translate_camera(mouse_tracker);
+                    }else if(current_mode == mode.rotate_atoms){
+                        visualizer.rotate_atoms(mouse_tracker);
+                    }else if(current_mode == mode.translate_atoms){
+                        visualizer.translate_atoms(mouse_tracker);
+                    }else if(current_mode == mode.select){
+                        visualizer.move_selection(event, mouse_tracker.new);
+                    }
+                }
+                function onmouseup(event){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    mouse_tracker.track(event);
+                    if(current_mode == mode.select){
+                        visualizer.over_selection(event, mouse_tracker.new);
+                    }
+                    current_mode = mode.normal;
+                }
+                function onwheel(event){
+                    const delta = event.deltaY;
+                    visualizer.zoom(delta);
+                }
+                function ondblclick(event){
+                    mouse_tracker.track(event);
+                    visualizer.single_selection(event, mouse_tracker.new);
+                }
+                function download(){
+                    const blob = new Blob([JSON.stringify(visualizer.input_manager.input)], {"type": "text/plain"});
+                    saveAs(blob, "download.json")
+                }
+                function ondrop(event){
+                    event.preventDefault();
+                    const reader = new FileReader();
+                    reader.readAsText(event.dataTransfer.files[0]);
+                    reader.onload = (_)=>{
+                        if (typeof reader.result == "string"){
+                            visualizer.set_input(JSON.parse(reader.result));
+                        }
+                    };
 
-                visualizer.onresize(null);
-                visualizer.sync_camera_light();
-                visualizer.tick();
+                }
+                // window.ondrop = visualizer.ondrop.bind(visualizer);
+                // window.onresize = visualizer.onresize.bind(visualizer);
+                // canvas.onwheel = visualizer.onwheel.bind(visualizer);
+                // canvas.onmouseup = visualizer.onmouseup.bind(visualizer);
+                // canvas.onmousemove = visualizer.onmousemove.bind(visualizer);
+                // canvas.onmousedown = visualizer.onmousedown.bind(visualizer);
+                // // canvas.oncontextmenu = visualizer.oncontextmenu.bind(visualizer);
+
+                // visualizer.onresize(null);
+                // visualizer.sync_camera_light();
+                // visualizer.tick();
             }
         </script>
     </body>
